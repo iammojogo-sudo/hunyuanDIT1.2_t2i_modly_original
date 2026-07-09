@@ -41,7 +41,7 @@ If you want to chain into 3D generation, connect the output of Generate Image di
 | Negative Prompt | — | What to avoid in the image |
 | Width | 1024 | 512–1280 |
 | Height | 1024 | 512–1280 |
-| Steps | 4 | Higher = slower but more detail. Default reduced from 25 thanks to DPMSolver scheduler swap |
+| Steps | 12 | Higher = slower but more detail |
 | Guidance Scale | 6.0 | How closely it follows the prompt |
 | Seed | 0 | 0 picks a random seed each run |
 

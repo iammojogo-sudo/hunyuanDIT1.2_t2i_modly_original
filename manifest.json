@@ -65,9 +65,9 @@
           "id": "steps",
           "label": "Steps",
           "type": "int",
-          "default": 4,
+          "default": 12,
           "min": 1,
-          "max": 20
+          "max": 50
         },
         {
           "id": "guidance_scale",
