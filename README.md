@@ -41,7 +41,7 @@ If you want to chain into 3D generation, connect the output of Generate Image di
 | Negative Prompt | — | What to avoid in the image |
 | Width | 1024 | 512–1280 |
 | Height | 1024 | 512–1280 |
-| Steps | 12 | Higher = slower but more detail |
+| Steps | 25 | Distilled model is optimized for 25 steps |
 | Guidance Scale | 6.0 | How closely it follows the prompt |
 | Seed | 0 | 0 picks a random seed each run |
 

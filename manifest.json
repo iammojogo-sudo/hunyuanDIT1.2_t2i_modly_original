@@ -65,8 +65,8 @@
           "id": "steps",
           "label": "Steps",
           "type": "int",
-          "default": 12,
-          "min": 1,
+          "default": 25,
+          "min": 10,
           "max": 50
         },
         {
