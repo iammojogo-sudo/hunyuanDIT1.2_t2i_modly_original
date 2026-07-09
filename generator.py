@@ -13,7 +13,7 @@ def print(*args, **kwargs):
     kwargs.setdefault("file", sys.stderr)
     _print(*args, **kwargs)
 
-HF_REPO = "Tencent-Hunyuan/HunyuanDiT-v1.2-Diffusers-Distilled"
+HF_REPO = "Tencent-Hunyuan/HunyuanDiT-Diffusers"
 
 def _int(val, default):
     try: return int(val)
@@ -27,13 +27,26 @@ def _float(val, default):
 class HunyuanDiT12Generator(BaseGenerator):
     MODEL_ID     = "hunyuandit_1_2_t2i"
     DISPLAY_NAME = "HunyuanDiT v1.2 Text-to-Image"
-    VRAM_GB      = 6
+    VRAM_GB      = 8
 
     def is_downloaded(self):
         check = self.download_check
         if check:
-            return (self.model_dir / check).exists()
-        return (self.model_dir / "model_index.json").exists()
+            if not (self.model_dir / check).exists():
+                return False
+        elif not (self.model_dir / "model_index.json").exists():
+            return False
+        try:
+            import json
+            with open(self.model_dir / "model_index.json") as f:
+                meta = json.load(f)
+            expected = self.hf_repo or HF_REPO
+            current = meta.get("_name_or_path", "")
+            if current and current != expected:
+                return False
+        except Exception:
+            pass
+        return True
 
     def load(self):
         if self._model is not None:
@@ -53,7 +66,10 @@ class HunyuanDiT12Generator(BaseGenerator):
             str(self.model_dir),
             local_files_only=True,
             torch_dtype=self._dtype,
-        ).to(self._device)
+        )
+
+        pipe.enable_model_cpu_offload()
+        pipe.vae.enable_tiling()
 
         try:
             pipe.set_progress_bar_config(disable=True)
@@ -61,7 +77,7 @@ class HunyuanDiT12Generator(BaseGenerator):
             pass
 
         self._model = pipe
-        print("[HunyuanDiT] ready on %s" % self._device)
+        print("[HunyuanDiT] ready with CPU offloading")
 
     def unload(self):
         self._model = None
@@ -105,7 +121,7 @@ class HunyuanDiT12Generator(BaseGenerator):
 
         width  = _int(params.get("width"), 1024)
         height = _int(params.get("height"), 1024)
-        steps  = _int(params.get("steps"), 25)
+        steps  = _int(params.get("steps"), 30)
         cfg    = _float(params.get("guidance_scale"), 6.0)
         seed   = _int(params.get("seed"), 0)
         if seed == 0:
@@ -168,6 +184,19 @@ class HunyuanDiT12Generator(BaseGenerator):
         from huggingface_hub import snapshot_download
 
         repo = self.hf_repo or HF_REPO
+        try:
+            import json
+            mi = self.model_dir / "model_index.json"
+            if mi.exists():
+                with open(mi) as f:
+                    meta = json.load(f)
+                if meta.get("_name_or_path", "") != repo:
+                    import shutil
+                    print("[HunyuanDiT] model repo changed, clearing old weights")
+                    shutil.rmtree(str(self.model_dir))
+                    self.model_dir.mkdir(parents=True, exist_ok=True)
+        except Exception:
+            pass
         skips = list(getattr(self, "hf_skip_prefixes", []) or [])
 
         ignore = []

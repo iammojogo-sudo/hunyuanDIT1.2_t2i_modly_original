@@ -1,8 +1,8 @@
 # HunyuanDiT v1.2 Text-to-Image — Modly Extension
 
-Text-to-image generation using Tencent's HunyuanDiT v1.2 Distilled model. Runs locally on your GPU, supports both English and Chinese prompts, and outputs at up to 1280×1280.
+Text-to-image generation using Tencent's HunyuanDiT v1.2 model. Runs locally on your GPU with CPU offloading for 8GB cards, supports both English and Chinese prompts, and outputs at up to 1280×1280.
 
-Weights are ~6GB. You'll need around 6GB of VRAM.
+Weights are ~12GB. You'll need around 8GB of VRAM with CPU offloading enabled.
 
 ---
 
@@ -41,7 +41,7 @@ If you want to chain into 3D generation, connect the output of Generate Image di
 | Negative Prompt | — | What to avoid in the image |
 | Width | 1024 | 512–1280 |
 | Height | 1024 | 512–1280 |
-| Steps | 25 | Distilled model is optimized for 25 steps |
+| Steps | 30 | Full model uses 30 steps for best quality |
 | Guidance Scale | 6.0 | How closely it follows the prompt |
 | Seed | 0 | 0 picks a random seed each run |
 
