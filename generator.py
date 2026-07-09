@@ -101,11 +101,12 @@ class HunyuanDiT12Generator(BaseGenerator):
             except Exception as e:
                 print("[HunyuanDiT] enhancement failed, using original prompt: %s" % e)
 
-        neg = params.get("negative_prompt") or None
+        neg_raw = params.get("negative_prompt") or None
+        neg = ", ".join([neg_raw] * 8) if neg_raw else None
 
         width  = _int(params.get("width"), 1024)
         height = _int(params.get("height"), 1024)
-        steps  = _int(params.get("steps"), 25)
+        steps  = _int(params.get("steps"), 12)
         cfg    = _float(params.get("guidance_scale"), 6.0)
         seed   = _int(params.get("seed"), 0)
         if seed == 0:
