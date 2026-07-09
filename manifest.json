@@ -4,7 +4,7 @@
   "type": "model",
   "source": "https://github.com/iammojogo-sudo/hunyuanDIT1.2_t2i_modly",
   "description": "Fast text-to-image generation using Tencent HunyuanDiT v1.2 Distilled. Supports English and Chinese prompts. ~6GB VRAM.",
-  "version": "1.1.0",
+  "version": "1.3.0",
   "author": "iammojogo",
   "vram_gb": 6,
   "tags": [
@@ -65,9 +65,9 @@
           "id": "steps",
           "label": "Steps",
           "type": "int",
-          "default": 25,
-          "min": 10,
-          "max": 50
+          "default": 4,
+          "min": 1,
+          "max": 20
         },
         {
           "id": "guidance_scale",

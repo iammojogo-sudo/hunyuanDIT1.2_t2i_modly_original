@@ -43,7 +43,7 @@ class HunyuanDiT12Generator(BaseGenerator):
             self._download_weights()
 
         import torch
-        from diffusers import HunyuanDiTPipeline
+        from diffusers import HunyuanDiTPipeline, DPMSolverMultistepScheduler
 
         self._device = "cuda" if torch.cuda.is_available() else "cpu"
         self._dtype = torch.float16 if self._device == "cuda" else torch.float32
@@ -54,6 +54,11 @@ class HunyuanDiT12Generator(BaseGenerator):
             local_files_only=True,
             torch_dtype=self._dtype,
         ).to(self._device)
+
+        # Swap to DPMSolver — same quality in far fewer steps
+        pipe.scheduler = DPMSolverMultistepScheduler.from_config(
+            pipe.scheduler.config, use_karras_sigmas=True
+        )
 
         try:
             pipe.set_progress_bar_config(disable=True)
